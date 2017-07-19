@@ -10,9 +10,9 @@ export function fetchRecipes(ingredients){
 			'number=20',
 			'ranking=1'
 		].join('&');
-		console.log(`/recipes/findByIngredients?${params}`);
 		return Api.get(`/api/?${params}`)
 							.then( resp => {
+								//console.log('get recipes')
 								dispatch(setSearchedRecipes(resp));
 							})
 							.catch( error => console.log(error))

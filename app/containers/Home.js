@@ -20,7 +20,9 @@ class Home extends Component {
 	}
 
 	searchPressed(){
+		//console.log('clicked')
 		this.setState({searching: true});
+		console.log('props', this.props.fetchRecipes.toString())
 		this.props.fetchRecipes(this.state.ingredientsInput)
 			.then(() => this.setState({searching: false}))
 	}
