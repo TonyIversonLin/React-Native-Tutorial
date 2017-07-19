@@ -14,8 +14,15 @@ const {
 
 class Home extends Component {
 
+	constructor(props){
+		super(props);
+		this.state = {searching: false, ingredientsInput: ''};
+	}
+
 	searchPressed(){
-		this.props.fetchRecipes('bacon,cucumber,banana');
+		this.setState({searching: true});
+		this.props.fetchRecipes(this.state.ingredientsInput)
+			.then(() => this.setState({searching: false}))
 	}
 
 	recipes(){
@@ -27,19 +34,29 @@ class Home extends Component {
 
 	render(){
 		return <View style={styles.scene}>
+
 			<View style={styles.searchSection}>
+
+				<TextInput style={styles.searchInput} 
+					returnKeyType ='search'
+					placeholder ='Ingredients (comma delimited)'
+					onChangeText = { ingredientsInput => this.setState({ingredientsInput})}
+					value = {this.state.ingredientsInput}
+				/>
 				<TouchableHighlight style={styles.searchButton} onPress={() => this.searchPressed()}>
 					<Text>Fetch Recipe</Text>
 				</TouchableHighlight>
 			</View>
+
 			<ScrollView style={styles.scrollSection}>
-				{this.recipes().map(recipe => {
+				{!this.state.searching && this.recipes().map(recipe => {
 					return <View key={recipe.title}>
 						<Image source={{uri: recipe.thumbnail}} style={styles.resultImage}/>
 						<Text style={styles.resultText}>{recipe.title}</Text>
 					</View>
 				})}
 			</ScrollView>
+			{this.state.searching ? <Text>Searching ...</Text> : null}
 		</View>
 	}
 }
@@ -53,7 +70,14 @@ const styles = StyleSheet.create({
 		height: 30,
 		borderBottomColor: '#000',
 		borderBottomWidth: 1,
-		padding: 5
+		padding: 5,
+		flexDirection: 'row'
+	},
+	searchInput: {
+		flex: 0.7
+	},
+	searchButton: {
+		flex: 0.3
 	},
 	scrollSection: {
 		flex: 0.8
